@@ -1,6 +1,9 @@
 library(tidyverse)
 library(readxl)
 
+# create two directories: output_data and raw_data. Save the HIC csvs from the 
+# CSV Export into the raw_data folder
+
 # Project file ------------------------------------------------------------
 project <- read_csv("raw_data/Project.csv") %>%
   mutate(OperatingStartDate = format.Date(OperatingStartDate, "%Y-%m-%d"),
@@ -9,8 +12,8 @@ project <- read_csv("raw_data/Project.csv") %>%
          DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T")) %>%
   filter(!is.na(ProjectType) & ProjectType %in% c(1:3, 8:11, 13))
 
-# Pulling in PIT data - this data comes from the 0630 and 0628 reports. i just had to 
-# force-by-Excel the data into these columns. ugly but effective.
+# Pulling in PIT data - this data comes from the 0630 and 0628 reports. I just 
+# had to force-by-Excel the data into these columns. ugly but effective.
 pit <- read_csv("raw_data/PIT2019.csv")
 
 project <- project %>% select(-PITCount) %>%
