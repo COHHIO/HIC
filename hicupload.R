@@ -2,7 +2,8 @@ library(tidyverse)
 library(readxl)
 
 # create two directories: output_data and raw_data. Save the HIC csvs from the 
-# CSV Export into the raw_data folder
+# CSV Export into the raw_data folder. Replace as you correct things and rerun 
+# the export 
 
 # Project file ------------------------------------------------------------
 project <- read_csv("raw_data/Project.csv") %>%
