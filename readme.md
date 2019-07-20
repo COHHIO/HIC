@@ -10,11 +10,13 @@ This is an open source project released under the GNU AGPLv3 license. See LICENS
 
 All the code in this repository is written using R and R Studio. Please consult the book [R for Data Science](https://r4ds.had.co.nz/) for help getting started with R and R Studio.
 
-### Data Source
+### Data Sources
 
-This app takes the raw HUD CSV Export files you can get from ServicePoint directly into the project directory.
+This app takes the raw HUD CSV Export files you can get from ServicePoint directly into the project directory. 
 
-If you clone or fork this, create an "output_data" folder and a "raw_data" folder in your R project. Save your HUD CSV export files to the raw_data folder, then you can upload the resulting files from the output_data folder to HDX.
+You also need the PIT Count for each project, which does not come through in the HUD CSV Export (at least in ServicePoint's.) So in the raw_data folder, there is also a file named PIT2019.csv that just has two columns: ProjectID, and PITCount. Both numeric.
+
+If you clone or fork this, create an "output_data" folder and a "raw_data" folder in your R project. Save your HUD CSV export and PIT Count data files to the raw_data folder, then you can upload the resulting files from the output_data folder to HDX.
 
 ### Security
 
