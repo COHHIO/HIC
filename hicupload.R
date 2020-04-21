@@ -65,7 +65,7 @@ write_csv(geography, "output_data/ProjectCoC.csv",
 # Funder file -------------------------------------------------------------
 funder <- read_csv("raw_data/Funder.csv") %>%
   filter(!is.na(Funder) &
-           Funder != 46)
+           Funder != 46) # SHOULD NOT BE NECESSARY, HDX PROBLEM
 write_csv(funder, "output_data/Funder.csv", 
           na = "",  
           quote_escape = "backslash")
