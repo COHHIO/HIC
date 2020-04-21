@@ -1,3 +1,17 @@
+# COHHIO_HMIS
+# Copyright (C) 2019  Coalition on Homelessness and Housing in Ohio (COHHIO)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details at
+# <https://www.gnu.org/licenses/>.
+
 library(tidyverse)
 library(readxl)
 
@@ -7,20 +21,19 @@ library(readxl)
 
 # Project file ------------------------------------------------------------
 project <- read_csv("raw_data/Project.csv") %>%
-  mutate(OperatingStartDate = format.Date(OperatingStartDate, "%Y-%m-%d"),
-         OperatingEndDate = format.Date(OperatingEndDate, "%Y-%m-%d"),
-         DateCreated = format.Date(DateCreated, "%Y-%m-%d %T"),
-         DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T")) %>%
   filter(!is.na(ProjectType) & ProjectType %in% c(1:3, 8:11, 13))
 
-# Pulling in PIT data - this data comes from the 0630 and 0628 reports. I just 
-# had to force-by-Excel the data into these columns. ugly but effective.
-pit <- read_csv("raw_data/PIT2019.csv")
+# The PIT Count data doesn't come in via the HUD CSV Export in ServicePoint.
+# As such, this data comes from a script I wrote on HMIS_COHHIO
+# since there's Enrollment data over there. It's a .csv file in the Reports
+# folder. Just copy it into the raw_data folder in this project.
+pit <- read_csv("raw_data/PIT2020.csv")
 
 project <- project %>% select(-PITCount) %>%
   left_join(., pit, by = "ProjectID") %>%
-  select(1:13, 19, 14:18) %>%
-  mutate(ProjectName = if_else(is.na(ProjectCommonName), ProjectName, ProjectCommonName),
+  mutate(ProjectName = if_else(is.na(ProjectCommonName), 
+                               ProjectName, 
+                               ProjectCommonName),
          PITCount = if_else(is.na(PITCount), 0, PITCount))
 
 rm(pit)
@@ -30,66 +43,29 @@ write_csv(project, "output_data/Project.csv",
           quote_escape = "backslash")
 
 # Organization file -------------------------------------------------------
-organization <- read_csv("raw_data/Organization.csv") %>%
-  mutate(DateCreated = format.Date(DateCreated, "%Y-%m-%d %T"),
-         DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T"))
+organization <- read_csv("raw_data/Organization.csv") 
 
 write_csv(organization, "output_data/Organization.csv", 
           na = "",  
           quote_escape = "backslash")
 
 # Inventory file ----------------------------------------------------------
-inventory <- read_csv("raw_data/Inventory.csv") %>%
-  mutate(InventoryStartDate = format.Date(InventoryStartDate, "%Y-%m-%d"),
-         InventoryEndDate = format.Date(InventoryEndDate, "%Y-%m-%d"),
-         DateCreated = format.Date(DateCreated, "%Y-%m-%d %T"),
-         DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T"),
-         InformationDate = format.Date(InformationDate, "%Y-%m-%d"),
-         HMISParticipatingBeds = 
-           if_else(is.na(HMISParticipatingBeds), 0, HMISParticipatingBeds),
-         BedType = 1) %>% # THIS SHOULD NOT BE NECESSARY!!!
-  select(InventoryID, ProjectID, CoCCode, InformationDate, HouseholdType, 
-         Availability, UnitInventory, BedInventory, CHBedInventory, 
-         VetBedInventory, YouthBedInventory, BedType, InventoryStartDate,
-         InventoryEndDate, HMISParticipatingBeds, DateCreated, DateUpdated,
-         UserID, DateDeleted, ExportID)
+inventory <- read_csv("raw_data/Inventory.csv") 
 
 write_csv(inventory, "output_data/Inventory.csv", 
           na = "",  
           quote_escape = "backslash")
 
-# Geography file ----------------------------------------------------------
-geography <- read_csv("raw_data/Geography.csv") %>%
-  mutate(DateCreated = format.Date(DateCreated, "%Y-%m-%d %T"),
-         DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T"),
-         InformationDate = format.Date(InformationDate, "%Y-%m-%d")) %>%
-  filter(!is.na(GeographyType)) %>%
-  select(-Address1, -Address2, -City, -State, -ZIP)
-addresses <- read_xlsx("raw_data/RMisc.xlsx",
-                      sheet = 5,
-                      range = cell_cols(c("A", "I:M"))) #SHOULD NOT BE NECESSARY
-geography <- left_join(geography, addresses, by = "ProjectID") %>%
-  mutate(Address1 = `Address Line1`,
-         Address2 = `Address Line2`,
-         City = `Address City`,
-         State = `Address Province`,
-         ZIP = `Address Postal Code`) %>%
-  select(GeographyID, ProjectID, CoCCode, InformationDate, Geocode, 
-         GeographyType, Address1, Address2, City, State, ZIP, DateCreated,
-         DateUpdated, UserID, DateDeleted, ExportID)
-write_csv(geography, "output_data/Geography.csv", 
+# ProjectCoC file ----------------------------------------------------------
+geography <- read_csv("raw_data/ProjectCoC.csv")
+write_csv(geography, "output_data/ProjectCoC.csv", 
           na = "",  
           quote_escape = "backslash")
 
-rm(addresses)
-
 # Funder file -------------------------------------------------------------
 funder <- read_csv("raw_data/Funder.csv") %>%
-  mutate(StartDate = format.Date(StartDate, "%Y-%m-%d"),
-         EndDate = format.Date(EndDate, "%Y-%m-%d"),
-         DateCreated = format.Date(DateCreated, "%Y-%m-%d %T"),
-         DateUpdated = format.Date(DateUpdated, "%Y-%m-%d %T")) %>%
-  filter(!is.na(Funder))
+  filter(!is.na(Funder) &
+           Funder != 46)
 write_csv(funder, "output_data/Funder.csv", 
           na = "",  
           quote_escape = "backslash")
