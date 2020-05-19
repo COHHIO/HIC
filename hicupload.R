@@ -29,12 +29,24 @@ project <- read_csv("raw_data/Project.csv") %>%
 # folder. Just copy it into the raw_data folder in this project.
 pit <- read_csv("raw_data/PIT2020.csv")
 
+shelteredpit <- read_xls("raw_data/shelteredpit.xls",
+                         sheet = 1) %>%
+  filter(!is.na(organization_name)) %>%
+  mutate(project_name = substr(project_name, 1, 50)) %>%
+  rename("Clients" = 4) %>%
+  group_by(project_name) %>%
+  summarise(Clients = sum(Clients, na.rm = TRUE)) %>%
+  ungroup() %>%
+  left_join(project %>% select(ProjectID, ProjectName),
+            by = c("project_name" = "ProjectName"))
+
 project <- project %>% select(-PITCount) %>%
   left_join(., pit, by = "ProjectID") %>%
   mutate(ProjectName = if_else(is.na(ProjectCommonName), 
                                ProjectName, 
                                ProjectCommonName),
-         PITCount = if_else(is.na(PITCount), 0, PITCount))
+         PITCount = if_else(is.na(PITCount), 0, PITCount)) %>%
+  select(1:13, 19, 14:18)
 
 rm(pit)
 
@@ -58,14 +70,15 @@ write_csv(inventory, "output_data/Inventory.csv",
 
 # ProjectCoC file ----------------------------------------------------------
 geography <- read_csv("raw_data/ProjectCoC.csv")
+
 write_csv(geography, "output_data/ProjectCoC.csv", 
           na = "",  
           quote_escape = "backslash")
 
 # Funder file -------------------------------------------------------------
 funder <- read_csv("raw_data/Funder.csv") %>%
-  filter(!is.na(Funder) &
-           Funder != 46) # SHOULD NOT BE NECESSARY, HDX PROBLEM
+  filter(!is.na(Funder))
+
 write_csv(funder, "output_data/Funder.csv", 
           na = "",  
           quote_escape = "backslash")
