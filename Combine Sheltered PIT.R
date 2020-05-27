@@ -27,9 +27,13 @@ non_participating <- rbind(non_participating_es, non_participating_th)
 
 rm(non_participating_es, non_participating_th)
 
-participating_fam_all <- read_xlsx(here("raw_data/0630.xlsx"),
-                                   sheet = 1,
-                                   range = "a3:c37") %>%
+
+# All Fam -----------------------------------------------------------------
+
+participating_fam_all <-
+  read_xlsx(here("raw_data/0630.xlsx"),
+            sheet = 1,
+            range = "a3:c37") %>%
   rename("Measure" = 1) %>%
   rownames_to_column() %>%
   mutate(
@@ -87,47 +91,303 @@ participating_fam_all <-
 
 rm(participating_fam_all_es, participating_fam_all_th)
 
-participating_ind_all <- read_xlsx(here("raw_data/0630.xlsx"),
-                                   sheet = 1,
-                                   range = "a40:d72") %>%
-  rename("Measure" = 1) %>%
-  filter(!is.na(Measure))
 
-participating_co_all <- read_xlsx(here("raw_data/0630.xlsx"),
-                                  sheet = 1,
-                                  range = "a75:c104") %>%
-  rename("Measure" = 1) %>%
-  filter(!is.na(Measure))
+# All Individual ----------------------------------------------------------
 
-participating_fam_vet <- read_xlsx(here("raw_data/0630.xlsx"),
-                                   sheet = 2,
-                                   range = "a3:c34") %>%
+participating_ind_all <-
+  read_xlsx(here("raw_data/0630.xlsx"),
+            sheet = 1,
+            range = "a40:d72") %>%
   rename("Measure" = 1) %>%
-  filter(!is.na(Measure))
+  rownames_to_column() %>%
+  mutate(
+    Measure = case_when(
+      rowname == 1 ~ "HHwChildHouseholds",
+      rowname == 2 ~ "HHwChildTotalPersons",
+      rowname == 3 ~ "HHwChildUnder18",
+      rowname == 4 ~ "HHwChild18to24",
+      rowname == 5 ~ "HHwChildOver24",
+      rowname == 6 ~ "HHwChildMissingDOB",
+      rowname == 9 ~ "HHwChildFemale",
+      rowname == 10 ~ "HHwChildMale",
+      rowname == 11 ~ "HHwChildTransgender",
+      rowname == 12 ~ "HHwChildNonConforming",
+      rowname == 13 ~ "HHwChildGenderDKR",
+      rowname == 14 ~ "HHwChildGenderMissing",
+      rowname == 17 ~ "HHwChildNonHispanic",
+      rowname == 18 ~ "HHwChildHispanic",
+      rowname == 19 ~ "HHwChildEthnicityDKR",
+      rowname == 20 ~ "HHwChildEthnicityMissing",
+      rowname == 23 ~ "HHwChildRaceWhite",
+      rowname == 24 ~ "HHwChildRaceBlack",
+      rowname == 25 ~ "HHwChildRaceAsian",
+      rowname == 26 ~ "HHwChildRaceAmIndAkNat",
+      rowname == 27 ~ "HHwChildRaceNatHawaiiPacIsland",
+      rowname == 28 ~ "HHwChildRaceMultiple",
+      rowname == 29 ~ "HHwChildRaceDKR",
+      rowname == 30 ~ "HHwChildRaceMissing",
+      rowname == 33 ~ "HHwChildCHHouseholds",
+      rowname == 34 ~ "HHwChildCHPersons",
+      TRUE ~ Measure
+    )
+  ) %>%
+  filter(!is.na(Emergency)) %>%
+  select(-rowname) 
 
-participating_ind_vet <- read_xlsx(here("raw_data/0630.xlsx"),
-                                   sheet = 2,
-                                   range = "a37:d67") %>%
-  rename("Measure" = 1) %>%
-  filter(!is.na(Measure))
 
-participating_ind_youth <- read_xlsx(here("raw_data/0630.xlsx"),
-                                     sheet = 3,
-                                     range = "a3:d67") %>%
-  rename("Measure" = 1) %>%
-  filter(!is.na(Measure))
+# All Children-Only -------------------------------------------------------
 
-participating_fam_youth <- read_xlsx(here("raw_data/0630.xlsx"),
-                                     sheet = 3,
-                                     range = "a38:c75") %>%
+participating_co_all <-
+  read_xlsx(here("raw_data/0630.xlsx"),
+            sheet = 1,
+            range = "a75:c104") %>%
   rename("Measure" = 1) %>%
-  filter(!is.na(Measure))
+  rownames_to_column() %>%
+  mutate(
+    Measure = case_when(
+      rowname == 1 ~ "HHwChildHouseholds",
+      rowname == 2 ~ "HHwChildTotalPersons",
+      rowname == 3 ~ "HHwChildUnder18",
+      rowname == 4 ~ "HHwChild18to24",
+      rowname == 5 ~ "HHwChildOver24",
+      rowname == 6 ~ "HHwChildMissingDOB",
+      rowname == 9 ~ "HHwChildFemale",
+      rowname == 10 ~ "HHwChildMale",
+      rowname == 11 ~ "HHwChildTransgender",
+      rowname == 12 ~ "HHwChildNonConforming",
+      rowname == 13 ~ "HHwChildGenderDKR",
+      rowname == 14 ~ "HHwChildGenderMissing",
+      rowname == 17 ~ "HHwChildNonHispanic",
+      rowname == 18 ~ "HHwChildHispanic",
+      rowname == 19 ~ "HHwChildEthnicityDKR",
+      rowname == 20 ~ "HHwChildEthnicityMissing",
+      rowname == 23 ~ "HHwChildRaceWhite",
+      rowname == 24 ~ "HHwChildRaceBlack",
+      rowname == 25 ~ "HHwChildRaceAsian",
+      rowname == 26 ~ "HHwChildRaceAmIndAkNat",
+      rowname == 27 ~ "HHwChildRaceNatHawaiiPacIsland",
+      rowname == 28 ~ "HHwChildRaceMultiple",
+      rowname == 29 ~ "HHwChildRaceDKR",
+      rowname == 30 ~ "HHwChildRaceMissing",
+      rowname == 33 ~ "HHwChildCHHouseholds",
+      rowname == 34 ~ "HHwChildCHPersons",
+      TRUE ~ Measure
+    )
+  ) %>%
+  filter(!is.na(Emergency)) %>%
+  select(-rowname) 
 
-participating_subpops <- read_xlsx(here("raw_data/0630.xlsx"),
-                                   sheet = 4,
-                                   range = "a4:d8") %>%
+
+# Vet Fam -----------------------------------------------------------------
+
+participating_fam_vet <-
+  read_xlsx(here("raw_data/0630.xlsx"),
+            sheet = 2,
+            range = "a3:c34") %>%
   rename("Measure" = 1) %>%
-  filter(!is.na(Measure))
+  rownames_to_column() %>%
+  mutate(
+    Measure = case_when(
+      rowname == 1 ~ "HHwChildHouseholds",
+      rowname == 2 ~ "HHwChildTotalPersons",
+      rowname == 3 ~ "HHwChildUnder18",
+      rowname == 4 ~ "HHwChild18to24",
+      rowname == 5 ~ "HHwChildOver24",
+      rowname == 6 ~ "HHwChildMissingDOB",
+      rowname == 9 ~ "HHwChildFemale",
+      rowname == 10 ~ "HHwChildMale",
+      rowname == 11 ~ "HHwChildTransgender",
+      rowname == 12 ~ "HHwChildNonConforming",
+      rowname == 13 ~ "HHwChildGenderDKR",
+      rowname == 14 ~ "HHwChildGenderMissing",
+      rowname == 17 ~ "HHwChildNonHispanic",
+      rowname == 18 ~ "HHwChildHispanic",
+      rowname == 19 ~ "HHwChildEthnicityDKR",
+      rowname == 20 ~ "HHwChildEthnicityMissing",
+      rowname == 23 ~ "HHwChildRaceWhite",
+      rowname == 24 ~ "HHwChildRaceBlack",
+      rowname == 25 ~ "HHwChildRaceAsian",
+      rowname == 26 ~ "HHwChildRaceAmIndAkNat",
+      rowname == 27 ~ "HHwChildRaceNatHawaiiPacIsland",
+      rowname == 28 ~ "HHwChildRaceMultiple",
+      rowname == 29 ~ "HHwChildRaceDKR",
+      rowname == 30 ~ "HHwChildRaceMissing",
+      rowname == 33 ~ "HHwChildCHHouseholds",
+      rowname == 34 ~ "HHwChildCHPersons",
+      TRUE ~ Measure
+    )
+  ) %>%
+  filter(!is.na(Emergency)) %>%
+  select(-rowname) 
+
+
+# Vet IND -----------------------------------------------------------------
+
+participating_ind_vet <-
+  read_xlsx(here("raw_data/0630.xlsx"),
+            sheet = 2,
+            range = "a37:d67") %>%
+  rename("Measure" = 1) %>%
+  rownames_to_column() %>%
+  mutate(
+    Measure = case_when(
+      rowname == 1 ~ "HHwChildHouseholds",
+      rowname == 2 ~ "HHwChildTotalPersons",
+      rowname == 3 ~ "HHwChildUnder18",
+      rowname == 4 ~ "HHwChild18to24",
+      rowname == 5 ~ "HHwChildOver24",
+      rowname == 6 ~ "HHwChildMissingDOB",
+      rowname == 9 ~ "HHwChildFemale",
+      rowname == 10 ~ "HHwChildMale",
+      rowname == 11 ~ "HHwChildTransgender",
+      rowname == 12 ~ "HHwChildNonConforming",
+      rowname == 13 ~ "HHwChildGenderDKR",
+      rowname == 14 ~ "HHwChildGenderMissing",
+      rowname == 17 ~ "HHwChildNonHispanic",
+      rowname == 18 ~ "HHwChildHispanic",
+      rowname == 19 ~ "HHwChildEthnicityDKR",
+      rowname == 20 ~ "HHwChildEthnicityMissing",
+      rowname == 23 ~ "HHwChildRaceWhite",
+      rowname == 24 ~ "HHwChildRaceBlack",
+      rowname == 25 ~ "HHwChildRaceAsian",
+      rowname == 26 ~ "HHwChildRaceAmIndAkNat",
+      rowname == 27 ~ "HHwChildRaceNatHawaiiPacIsland",
+      rowname == 28 ~ "HHwChildRaceMultiple",
+      rowname == 29 ~ "HHwChildRaceDKR",
+      rowname == 30 ~ "HHwChildRaceMissing",
+      rowname == 33 ~ "HHwChildCHHouseholds",
+      rowname == 34 ~ "HHwChildCHPersons",
+      TRUE ~ Measure
+    )
+  ) %>%
+  filter(!is.na(Emergency)) %>%
+  select(-rowname) 
+
+# Youth IND ---------------------------------------------------------------
+
+participating_ind_youth <-
+  read_xlsx(here("raw_data/0630.xlsx"),
+            sheet = 3,
+            range = "a3:d67") %>%
+  rename("Measure" = 1) %>%
+  rownames_to_column() %>%
+  mutate(
+    Measure = case_when(
+      rowname == 1 ~ "HHwChildHouseholds",
+      rowname == 2 ~ "HHwChildTotalPersons",
+      rowname == 3 ~ "HHwChildUnder18",
+      rowname == 4 ~ "HHwChild18to24",
+      rowname == 5 ~ "HHwChildOver24",
+      rowname == 6 ~ "HHwChildMissingDOB",
+      rowname == 9 ~ "HHwChildFemale",
+      rowname == 10 ~ "HHwChildMale",
+      rowname == 11 ~ "HHwChildTransgender",
+      rowname == 12 ~ "HHwChildNonConforming",
+      rowname == 13 ~ "HHwChildGenderDKR",
+      rowname == 14 ~ "HHwChildGenderMissing",
+      rowname == 17 ~ "HHwChildNonHispanic",
+      rowname == 18 ~ "HHwChildHispanic",
+      rowname == 19 ~ "HHwChildEthnicityDKR",
+      rowname == 20 ~ "HHwChildEthnicityMissing",
+      rowname == 23 ~ "HHwChildRaceWhite",
+      rowname == 24 ~ "HHwChildRaceBlack",
+      rowname == 25 ~ "HHwChildRaceAsian",
+      rowname == 26 ~ "HHwChildRaceAmIndAkNat",
+      rowname == 27 ~ "HHwChildRaceNatHawaiiPacIsland",
+      rowname == 28 ~ "HHwChildRaceMultiple",
+      rowname == 29 ~ "HHwChildRaceDKR",
+      rowname == 30 ~ "HHwChildRaceMissing",
+      rowname == 33 ~ "HHwChildCHHouseholds",
+      rowname == 34 ~ "HHwChildCHPersons",
+      TRUE ~ Measure
+    )
+  ) %>%
+  filter(!is.na(Emergency)) %>%
+  select(-rowname) 
+
+# Youth FAM ---------------------------------------------------------------
+
+participating_fam_youth <-
+  read_xlsx(here("raw_data/0630.xlsx"),
+            sheet = 3,
+            range = "a38:c75") %>%
+  rename("Measure" = 1) %>%
+  rownames_to_column() %>%
+  mutate(
+    Measure = case_when(
+      rowname == 1 ~ "HHwChildHouseholds",
+      rowname == 2 ~ "HHwChildTotalPersons",
+      rowname == 3 ~ "HHwChildUnder18",
+      rowname == 4 ~ "HHwChild18to24",
+      rowname == 5 ~ "HHwChildOver24",
+      rowname == 6 ~ "HHwChildMissingDOB",
+      rowname == 9 ~ "HHwChildFemale",
+      rowname == 10 ~ "HHwChildMale",
+      rowname == 11 ~ "HHwChildTransgender",
+      rowname == 12 ~ "HHwChildNonConforming",
+      rowname == 13 ~ "HHwChildGenderDKR",
+      rowname == 14 ~ "HHwChildGenderMissing",
+      rowname == 17 ~ "HHwChildNonHispanic",
+      rowname == 18 ~ "HHwChildHispanic",
+      rowname == 19 ~ "HHwChildEthnicityDKR",
+      rowname == 20 ~ "HHwChildEthnicityMissing",
+      rowname == 23 ~ "HHwChildRaceWhite",
+      rowname == 24 ~ "HHwChildRaceBlack",
+      rowname == 25 ~ "HHwChildRaceAsian",
+      rowname == 26 ~ "HHwChildRaceAmIndAkNat",
+      rowname == 27 ~ "HHwChildRaceNatHawaiiPacIsland",
+      rowname == 28 ~ "HHwChildRaceMultiple",
+      rowname == 29 ~ "HHwChildRaceDKR",
+      rowname == 30 ~ "HHwChildRaceMissing",
+      rowname == 33 ~ "HHwChildCHHouseholds",
+      rowname == 34 ~ "HHwChildCHPersons",
+      TRUE ~ Measure
+    )
+  ) %>%
+  filter(!is.na(Emergency)) %>%
+  select(-rowname) 
+
+# Subpops -----------------------------------------------------------------
+
+participating_subpops <-
+  read_xlsx(here("raw_data/0630.xlsx"),
+            sheet = 4,
+            range = "a4:d8") %>%
+  rename("Measure" = 1) %>%
+  rownames_to_column() %>%
+  mutate(
+    Measure = case_when(
+      rowname == 1 ~ "HHwChildHouseholds",
+      rowname == 2 ~ "HHwChildTotalPersons",
+      rowname == 3 ~ "HHwChildUnder18",
+      rowname == 4 ~ "HHwChild18to24",
+      rowname == 5 ~ "HHwChildOver24",
+      rowname == 6 ~ "HHwChildMissingDOB",
+      rowname == 9 ~ "HHwChildFemale",
+      rowname == 10 ~ "HHwChildMale",
+      rowname == 11 ~ "HHwChildTransgender",
+      rowname == 12 ~ "HHwChildNonConforming",
+      rowname == 13 ~ "HHwChildGenderDKR",
+      rowname == 14 ~ "HHwChildGenderMissing",
+      rowname == 17 ~ "HHwChildNonHispanic",
+      rowname == 18 ~ "HHwChildHispanic",
+      rowname == 19 ~ "HHwChildEthnicityDKR",
+      rowname == 20 ~ "HHwChildEthnicityMissing",
+      rowname == 23 ~ "HHwChildRaceWhite",
+      rowname == 24 ~ "HHwChildRaceBlack",
+      rowname == 25 ~ "HHwChildRaceAsian",
+      rowname == 26 ~ "HHwChildRaceAmIndAkNat",
+      rowname == 27 ~ "HHwChildRaceNatHawaiiPacIsland",
+      rowname == 28 ~ "HHwChildRaceMultiple",
+      rowname == 29 ~ "HHwChildRaceDKR",
+      rowname == 30 ~ "HHwChildRaceMissing",
+      rowname == 33 ~ "HHwChildCHHouseholds",
+      rowname == 34 ~ "HHwChildCHPersons",
+      TRUE ~ Measure
+    )
+  ) %>%
+  filter(!is.na(Emergency)) %>%
+  select(-rowname) 
 
 
 
