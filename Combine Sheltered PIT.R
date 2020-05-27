@@ -27,15 +27,64 @@ non_participating <- rbind(non_participating_es, non_participating_th)
 
 rm(non_participating_es, non_participating_th)
 
-participating_fam <- read_xlsx(here("raw_data/0630.xlsx"),
-                           sheet = 1,
-                           range = "a3:c37") %>%
+participating_fam_all <- read_xlsx(here("raw_data/0630.xlsx"),
+                                   sheet = 1,
+                                   range = "a3:c37") %>%
   rename("Measure" = 1) %>%
   filter(!is.na(Measure))
 
-participating_ind <- read_xlsx(here("raw_data/0630.xlsx"),
-                               sheet = 1,
-                               range = "a40:d72") %>%
+participating_ind_all <- read_xlsx(here("raw_data/0630.xlsx"),
+                                   sheet = 1,
+                                   range = "a40:d72") %>%
   rename("Measure" = 1) %>%
   filter(!is.na(Measure))
+
+participating_co_all <- read_xlsx(here("raw_data/0630.xlsx"),
+                                  sheet = 1,
+                                  range = "a75:c104") %>%
+  rename("Measure" = 1) %>%
+  filter(!is.na(Measure))
+
+participating_fam_vet <- read_xlsx(here("raw_data/0630.xlsx"),
+                                   sheet = 2,
+                                   range = "a3:c34") %>%
+  rename("Measure" = 1) %>%
+  filter(!is.na(Measure))
+
+participating_ind_vet <- read_xlsx(here("raw_data/0630.xlsx"),
+                                   sheet = 2,
+                                   range = "a37:d67") %>%
+  rename("Measure" = 1) %>%
+  filter(!is.na(Measure))
+
+participating_ind_youth <- read_xlsx(here("raw_data/0630.xlsx"),
+                                     sheet = 3,
+                                     range = "a3:d67") %>%
+  rename("Measure" = 1) %>%
+  filter(!is.na(Measure))
+
+participating_fam_youth <- read_xlsx(here("raw_data/0630.xlsx"),
+                                     sheet = 3,
+                                     range = "a38:c75") %>%
+  rename("Measure" = 1) %>%
+  filter(!is.na(Measure))
+
+participating_subpops <- read_xlsx(here("raw_data/0630.xlsx"),
+                                   sheet = 4,
+                                   range = "a4:d8") %>%
+  rename("Measure" = 1) %>%
+  filter(!is.na(Measure))
+
+
+
+
+
+
+
+
+
+
+
+
+
 
