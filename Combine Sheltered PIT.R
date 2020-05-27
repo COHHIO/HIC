@@ -14,6 +14,7 @@
 
 library(tidyverse)
 library(lubridate)
+library(readxl)
 library(here)
 
 non_participating_es <- 
@@ -22,8 +23,19 @@ non_participating_es <-
 non_participating_th <- 
   read_csv(here("raw_data/TH_HUD_Point_in_Time_Report.csv"))
 
-non_participating <- rbind(non_participating_es, non_participating_th)
+non_participating <- rbind(non_participating_es, non_participating_th) 
 
 rm(non_participating_es, non_participating_th)
 
+participating_fam <- read_xlsx(here("raw_data/0630.xlsx"),
+                           sheet = 1,
+                           range = "a3:c37") %>%
+  rename("Measure" = 1) %>%
+  filter(!is.na(Measure))
+
+participating_ind <- read_xlsx(here("raw_data/0630.xlsx"),
+                               sheet = 1,
+                               range = "a40:d72") %>%
+  rename("Measure" = 1) %>%
+  filter(!is.na(Measure))
 
