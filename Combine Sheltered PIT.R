@@ -31,7 +31,61 @@ participating_fam_all <- read_xlsx(here("raw_data/0630.xlsx"),
                                    sheet = 1,
                                    range = "a3:c37") %>%
   rename("Measure" = 1) %>%
-  filter(!is.na(Measure))
+  rownames_to_column() %>%
+  mutate(
+    Measure = case_when(
+      rowname == 1 ~ "HHwChildHouseholds",
+      rowname == 2 ~ "HHwChildTotalPersons",
+      rowname == 3 ~ "HHwChildUnder18",
+      rowname == 4 ~ "HHwChild18to24",
+      rowname == 5 ~ "HHwChildOver24",
+      rowname == 6 ~ "HHwChildMissingDOB",
+      rowname == 9 ~ "HHwChildFemale",
+      rowname == 10 ~ "HHwChildMale",
+      rowname == 11 ~ "HHwChildTransgender",
+      rowname == 12 ~ "HHwChildNonConforming",
+      rowname == 13 ~ "HHwChildGenderDKR",
+      rowname == 14 ~ "HHwChildGenderMissing",
+      rowname == 17 ~ "HHwChildNonHispanic",
+      rowname == 18 ~ "HHwChildHispanic",
+      rowname == 19 ~ "HHwChildEthnicityDKR",
+      rowname == 20 ~ "HHwChildEthnicityMissing",
+      rowname == 23 ~ "HHwChildRaceWhite",
+      rowname == 24 ~ "HHwChildRaceBlack",
+      rowname == 25 ~ "HHwChildRaceAsian",
+      rowname == 26 ~ "HHwChildRaceAmIndAkNat",
+      rowname == 27 ~ "HHwChildRaceNatHawaiiPacIsland",
+      rowname == 28 ~ "HHwChildRaceMultiple",
+      rowname == 29 ~ "HHwChildRaceDKR",
+      rowname == 30 ~ "HHwChildRaceMissing",
+      rowname == 33 ~ "HHwChildCHHouseholds",
+      rowname == 34 ~ "HHwChildCHPersons",
+      TRUE ~ Measure
+    )
+  ) %>%
+  filter(!is.na(Emergency)) %>%
+  select(-rowname) 
+
+participating_fam_all_es <- participating_fam_all %>%
+  pivot_wider(
+    id_cols = Measure,
+    names_from = Measure,
+    values_from = Emergency
+  ) %>%
+  mutate(ProjectType = "Emergency Shelter")
+
+participating_fam_all_th <- participating_fam_all %>%
+  pivot_wider(
+    id_cols = Measure,
+    names_from = Measure,
+    values_from = Transitional
+  ) %>%
+  mutate(ProjectType = "Transitional Housing")
+
+participating_fam_all <- 
+  rbind(participating_fam_all_es, participating_fam_all_th)
+
+rm(participating_fam_all_es, participating_fam_all_th)
 
 participating_ind_all <- read_xlsx(here("raw_data/0630.xlsx"),
                                    sheet = 1,
