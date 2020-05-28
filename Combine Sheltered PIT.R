@@ -15,6 +15,7 @@
 library(tidyverse)
 library(lubridate)
 library(readxl)
+library(writexl)
 library(here)
 
 non_participating_es <- 
@@ -151,7 +152,7 @@ participating_ind_all_sh <- participating_ind_all %>%
   pivot_wider(
     id_cols = Measure,
     names_from = Measure,
-    values_from = Transitional
+    values_from = `Safe Haven`
   ) %>%
   mutate(ProjectType = "Safe Haven")
 
@@ -547,7 +548,102 @@ participating <- participating_co_all %>%
   full_join(participating_ind_all, by = "ProjectType") %>%
   full_join(participating_ind_vet, by = "ProjectType") %>%
   full_join(participating_ind_youth, by = "ProjectType") %>%
-  full_join(participating_subpops, by = "ProjectType")
+  full_join(participating_subpops, by = "ProjectType") %>%
+  select(-ProjectType)
+
+# Adding columns from the ART report to non-participting ------------------
+
+non_participating <- non_participating %>%
+  mutate(
+    HHChildOnlyGenderDKR = 0,
+    HHChildOnlyGenderMissing = 0,
+    HHChildOnlyEthnicityDKR = 0,
+    HHChildOnlyEthnicityMissing = 0,
+    HHChildOnlyRaceDKR = 0,
+    HHChildOnlyRaceMissing = 0,
+    HHwChildMissingDOB = 0,
+    HHwChildGenderDKR = 0,
+    HHwChildGenderMissing = 0,
+    HHwChildEthnicityDKR = 0,
+    HHwChildEthnicityMissing = 0,
+    HHwChildRaceDKR = 0,
+    HHwChildRaceMissing = 0,
+    VetHHwChildGenderDKR = 0,
+    VetHHwChildGenderMissing = 0,
+    VetHHwChildEthnicityDKR = 0,
+    VetHHwChildEthnicityMissing = 0,
+    VetHHwChildRaceDKR = 0,
+    VetHHwChildRaceMissing = 0,
+    ParentYouthMissingHoH = 0,
+    ParentYouthGenderDKR = 0,
+    ParentYouthGenderMissing = 0,
+    ParentYouthEthnicityDKR = 0,
+    ParentYouthEthnicityMissing = 0,
+    ParentYouthRaceDKR = 0,
+    ParentYouthRaceMissing = 0,
+    HHwoChildMissingDOB = 0,
+    HHwoChildGenderDKR = 0,
+    HHwoChildGenderMissing = 0,
+    HHwoChildEthnicityDKR = 0,
+    HHwoChildEthnicityMissing = 0,
+    HHwoChildRaceDKR = 0,
+    HHwoChildRaceMissing = 0,
+    VetHHwoChildGenderDKR = 0,
+    VetHHwoChildGenderMissing = 0,
+    VetHHwoChildEthnicityDKR = 0,
+    VetHHwoChildEthnicityMissing = 0,
+    VetHHwoChildRaceDKR = 0,
+    VetHHwoChildRaceMissing = 0,
+    UYouthGenderDKR = 0,
+    UYouthGenderMissing = 0,
+    UYouthEthnicityDKR = 0,
+    UYouthEthnicityMissing = 0,
+    UYouthRaceDKR = 0,
+    UYouthRaceMissing = 0,
+    UYouthCHHouseholds = 0
+  ) %>%
+  add_row(ProjectType = "Safe Haven") %>%
+  select(-SoftwareName, -SourceID, -CountID, -OrganizationName, -ProjectName,
+         -ReportDate, -DateCreated, -ProjectType)
+
+non_participating[is.na(non_participating)] <- 0
+
+participating[is.na(participating)] <- 0
+
+total_sheltered <- non_participating + participating
+
+total_sheltered <- total_sheltered %>%
+  add_column(ProjectType = c("Emergency Shelter", 
+                             "Transitional Housing", 
+                             "Safe Haven"))
+
+rm(participating_co_all,
+   participating_fam_all,
+   participating_fam_vet,
+   participating_fam_youth,
+   participating_ind_all,
+   participating_ind_vet,
+   participating_ind_youth,
+   participating_subpops, 
+   non_participating,
+   participating)
+
+# Now how do we make this easy for Hannah ---------------------------------
+
+report <- total_sheltered %>%
+  pivot_longer(
+    cols = c(HHwChildHouseholds:UYouthCHHouseholds),
+    names_to = "ProjectType",
+    names_repair = "unique"
+  ) %>%
+  select("ProjectType" = 1, "Measure" = 2, 3) %>%
+  pivot_wider(names_from = ProjectType,
+              values_from = value)
+
+rm(total_sheltered)
+
+write_xlsx(report, here("output_data/MergedPIT.xlsx"))
+
 
 
 
