@@ -354,44 +354,42 @@ rm(participating_ind_vet_es, participating_ind_vet_th, participating_ind_vet_sh)
 participating_ind_youth <-
   read_xlsx(here("raw_data/0630.xlsx"),
             sheet = 3,
-            range = "a3:d67") %>%
+            range = "a3:d35") %>%
   rename("Measure" = 1) %>%
   rownames_to_column() %>%
   mutate(
     Measure = case_when(
-      rowname == 1 ~ "HHwChildHouseholds",
-      rowname == 2 ~ "HHwChildTotalPersons",
-      rowname == 3 ~ "HHwChildUnder18",
-      rowname == 4 ~ "HHwChild18to24",
-      rowname == 5 ~ "HHwChildOver24",
-      rowname == 6 ~ "HHwChildMissingDOB",
-      rowname == 9 ~ "HHwChildFemale",
-      rowname == 10 ~ "HHwChildMale",
-      rowname == 11 ~ "HHwChildTransgender",
-      rowname == 12 ~ "HHwChildNonConforming",
-      rowname == 13 ~ "HHwChildGenderDKR",
-      rowname == 14 ~ "HHwChildGenderMissing",
-      rowname == 17 ~ "HHwChildNonHispanic",
-      rowname == 18 ~ "HHwChildHispanic",
-      rowname == 19 ~ "HHwChildEthnicityDKR",
-      rowname == 20 ~ "HHwChildEthnicityMissing",
-      rowname == 23 ~ "HHwChildRaceWhite",
-      rowname == 24 ~ "HHwChildRaceBlack",
-      rowname == 25 ~ "HHwChildRaceAsian",
-      rowname == 26 ~ "HHwChildRaceAmIndAkNat",
-      rowname == 27 ~ "HHwChildRaceNatHawaiiPacIsland",
-      rowname == 28 ~ "HHwChildRaceMultiple",
-      rowname == 29 ~ "HHwChildRaceDKR",
-      rowname == 30 ~ "HHwChildRaceMissing",
-      rowname == 33 ~ "HHwChildCHHouseholds",
-      rowname == 34 ~ "HHwChildCHPersons",
+      rowname == 1 ~ "UYouthHouseholds",
+      rowname == 2 ~ "UYouthTotalYouth",
+      rowname == 3 ~ "UYouthUnder18",
+      rowname == 4 ~ "UYouth18to24",
+      rowname == 7 ~ "UYouthFemale",
+      rowname == 8 ~ "UYouthMale",
+      rowname == 9 ~ "UYouthTransgender",
+      rowname == 10 ~ "UYouthNonConforming",
+      rowname == 11 ~ "UYouthGenderDKR",
+      rowname == 12 ~ "UYouthGenderMissing",
+      rowname == 15 ~ "UYouthNonHispanic",
+      rowname == 16 ~ "UYouthHispanic",
+      rowname == 17 ~ "UYouthEthnicityDKR",
+      rowname == 18 ~ "UYouthEthnicityMissing",
+      rowname == 21 ~ "UYouthRaceWhite",
+      rowname == 22 ~ "UYouthRaceBlack",
+      rowname == 23 ~ "UYouthRaceAsian",
+      rowname == 24 ~ "UYouthRaceAmIndAkNat",
+      rowname == 25 ~ "UYouthRaceNatHawaiiPacIsland",
+      rowname == 26 ~ "UYouthRaceMultiple",
+      rowname == 27 ~ "UYouthRaceDKR",
+      rowname == 28 ~ "UYouthRaceMissing",
+      rowname == 31 ~ "UYouthCHHouseholds",
+      rowname == 32 ~ "UYouthCHPersons",
       TRUE ~ Measure
     )
   ) %>%
   filter(!is.na(Emergency)) %>%
   select(-rowname) 
 
-participating_fam_all_es <- participating_fam_all %>%
+participating_ind_youth_es <- participating_ind_youth %>%
   pivot_wider(
     id_cols = Measure,
     names_from = Measure,
@@ -399,7 +397,7 @@ participating_fam_all_es <- participating_fam_all %>%
   ) %>%
   mutate(ProjectType = "Emergency Shelter")
 
-participating_fam_all_th <- participating_fam_all %>%
+participating_ind_youth_th <- participating_ind_youth %>%
   pivot_wider(
     id_cols = Measure,
     names_from = Measure,
@@ -407,10 +405,22 @@ participating_fam_all_th <- participating_fam_all %>%
   ) %>%
   mutate(ProjectType = "Transitional Housing")
 
-participating_fam_all <- 
-  rbind(participating_fam_all_es, participating_fam_all_th)
+participating_ind_youth_sh <- participating_ind_youth %>%
+  pivot_wider(
+    id_cols = Measure,
+    names_from = Measure,
+    values_from = `Safe Haven`
+  ) %>%
+  mutate(ProjectType = "Safe Haven")
 
-rm(participating_fam_all_es, participating_fam_all_th)
+participating_ind_youth <- 
+  rbind(participating_ind_youth_es, 
+        participating_ind_youth_th, 
+        participating_ind_youth_sh)
+
+rm(participating_ind_youth_es, 
+   participating_ind_youth_th, 
+   participating_ind_youth_sh)
 
 # Youth FAM ---------------------------------------------------------------
 
@@ -422,39 +432,42 @@ participating_fam_youth <-
   rownames_to_column() %>%
   mutate(
     Measure = case_when(
-      rowname == 1 ~ "HHwChildHouseholds",
-      rowname == 2 ~ "HHwChildTotalPersons",
-      rowname == 3 ~ "HHwChildUnder18",
-      rowname == 4 ~ "HHwChild18to24",
-      rowname == 5 ~ "HHwChildOver24",
-      rowname == 6 ~ "HHwChildMissingDOB",
-      rowname == 9 ~ "HHwChildFemale",
-      rowname == 10 ~ "HHwChildMale",
-      rowname == 11 ~ "HHwChildTransgender",
-      rowname == 12 ~ "HHwChildNonConforming",
-      rowname == 13 ~ "HHwChildGenderDKR",
-      rowname == 14 ~ "HHwChildGenderMissing",
-      rowname == 17 ~ "HHwChildNonHispanic",
-      rowname == 18 ~ "HHwChildHispanic",
-      rowname == 19 ~ "HHwChildEthnicityDKR",
-      rowname == 20 ~ "HHwChildEthnicityMissing",
-      rowname == 23 ~ "HHwChildRaceWhite",
-      rowname == 24 ~ "HHwChildRaceBlack",
-      rowname == 25 ~ "HHwChildRaceAsian",
-      rowname == 26 ~ "HHwChildRaceAmIndAkNat",
-      rowname == 27 ~ "HHwChildRaceNatHawaiiPacIsland",
-      rowname == 28 ~ "HHwChildRaceMultiple",
-      rowname == 29 ~ "HHwChildRaceDKR",
-      rowname == 30 ~ "HHwChildRaceMissing",
-      rowname == 33 ~ "HHwChildCHHouseholds",
-      rowname == 34 ~ "HHwChildCHPersons",
+      rowname == 1 ~ "ParentYouthHouseholds",
+      rowname == 2 ~ "ParentYouthTotalPersons",
+      rowname == 3 ~ "ParentYouthParentingYouth",
+      rowname == 4 ~ "ParentYouthChildren",
+      rowname == 5 ~ "ParentYouthUnder18",
+      rowname == 6 ~ "ParentYouthUnder18Children",
+      rowname == 7 ~ "ParentYouth18to24",
+      rowname == 8 ~ "ParentYouth18to24Children",
+      rowname == 9 ~ "ParentYouthMissingHoH",
+      rowname == 12 ~ "ParentYouthFemale",
+      rowname == 13 ~ "ParentYouthMale",
+      rowname == 14 ~ "ParentYouthTransgender",
+      rowname == 15 ~ "ParentYouthNonConforming",
+      rowname == 16 ~ "ParentYouthGenderDKR",
+      rowname == 17 ~ "ParentYouthGenderMissing",
+      rowname == 20 ~ "ParentYouthNonHispanic",
+      rowname == 21 ~ "ParentYouthHispanic",
+      rowname == 22 ~ "ParentYouthEthnicityDKR",
+      rowname == 23 ~ "ParentYouthEthnicityMissing",
+      rowname == 26 ~ "ParentYouthRaceWhite",
+      rowname == 27 ~ "ParentYouthRaceBlack",
+      rowname == 28 ~ "ParentYouthRaceAsian",
+      rowname == 29 ~ "ParentYouthRaceAmIndAkNat",
+      rowname == 30 ~ "ParentYouthRaceNatHawaiiPacIsland",
+      rowname == 31 ~ "ParentYouthRaceMultiple",
+      rowname == 32 ~ "ParentYouthRaceDKR",
+      rowname == 33 ~ "ParentYouthRaceMissing",
+      rowname == 36 ~ "ParentYouthCHHouseholds",
+      rowname == 37 ~ "ParentYouthCHPersons",
       TRUE ~ Measure
     )
   ) %>%
   filter(!is.na(Emergency)) %>%
   select(-rowname) 
 
-participating_fam_all_es <- participating_fam_all %>%
+participating_fam_youth_es <- participating_fam_youth %>%
   pivot_wider(
     id_cols = Measure,
     names_from = Measure,
@@ -462,7 +475,7 @@ participating_fam_all_es <- participating_fam_all %>%
   ) %>%
   mutate(ProjectType = "Emergency Shelter")
 
-participating_fam_all_th <- participating_fam_all %>%
+participating_fam_youth_th <- participating_fam_youth %>%
   pivot_wider(
     id_cols = Measure,
     names_from = Measure,
@@ -470,10 +483,10 @@ participating_fam_all_th <- participating_fam_all %>%
   ) %>%
   mutate(ProjectType = "Transitional Housing")
 
-participating_fam_all <- 
-  rbind(participating_fam_all_es, participating_fam_all_th)
+participating_fam_youth <- 
+  rbind(participating_fam_youth_es, participating_fam_youth_th)
 
-rm(participating_fam_all_es, participating_fam_all_th)
+rm(participating_fam_youth_es, participating_fam_youth_th)
 
 # Subpops -----------------------------------------------------------------
 
@@ -485,39 +498,16 @@ participating_subpops <-
   rownames_to_column() %>%
   mutate(
     Measure = case_when(
-      rowname == 1 ~ "HHwChildHouseholds",
-      rowname == 2 ~ "HHwChildTotalPersons",
-      rowname == 3 ~ "HHwChildUnder18",
-      rowname == 4 ~ "HHwChild18to24",
-      rowname == 5 ~ "HHwChildOver24",
-      rowname == 6 ~ "HHwChildMissingDOB",
-      rowname == 9 ~ "HHwChildFemale",
-      rowname == 10 ~ "HHwChildMale",
-      rowname == 11 ~ "HHwChildTransgender",
-      rowname == 12 ~ "HHwChildNonConforming",
-      rowname == 13 ~ "HHwChildGenderDKR",
-      rowname == 14 ~ "HHwChildGenderMissing",
-      rowname == 17 ~ "HHwChildNonHispanic",
-      rowname == 18 ~ "HHwChildHispanic",
-      rowname == 19 ~ "HHwChildEthnicityDKR",
-      rowname == 20 ~ "HHwChildEthnicityMissing",
-      rowname == 23 ~ "HHwChildRaceWhite",
-      rowname == 24 ~ "HHwChildRaceBlack",
-      rowname == 25 ~ "HHwChildRaceAsian",
-      rowname == 26 ~ "HHwChildRaceAmIndAkNat",
-      rowname == 27 ~ "HHwChildRaceNatHawaiiPacIsland",
-      rowname == 28 ~ "HHwChildRaceMultiple",
-      rowname == 29 ~ "HHwChildRaceDKR",
-      rowname == 30 ~ "HHwChildRaceMissing",
-      rowname == 33 ~ "HHwChildCHHouseholds",
-      rowname == 34 ~ "HHwChildCHPersons",
+      rowname == 1 ~ "SubPopSeriousMentalIllness",
+      rowname == 2 ~ "SubPopSubstanceAbuse",
+      rowname == 3 ~ "SubPopHIVAIDS",
+      rowname == 4 ~ "SubPopDomesticViolence",
       TRUE ~ Measure
     )
   ) %>%
-  filter(!is.na(Emergency)) %>%
   select(-rowname) 
 
-participating_fam_all_es <- participating_fam_all %>%
+participating_subpops_es <- participating_subpops %>%
   pivot_wider(
     id_cols = Measure,
     names_from = Measure,
@@ -525,7 +515,7 @@ participating_fam_all_es <- participating_fam_all %>%
   ) %>%
   mutate(ProjectType = "Emergency Shelter")
 
-participating_fam_all_th <- participating_fam_all %>%
+participating_subpops_th <- participating_subpops %>%
   pivot_wider(
     id_cols = Measure,
     names_from = Measure,
@@ -533,15 +523,31 @@ participating_fam_all_th <- participating_fam_all %>%
   ) %>%
   mutate(ProjectType = "Transitional Housing")
 
-participating_fam_all <- 
-  rbind(participating_fam_all_es, participating_fam_all_th)
+participating_subpops_sh <- participating_subpops %>%
+  pivot_wider(
+    id_cols = Measure,
+    names_from = Measure,
+    values_from = `Safe Haven`
+  ) %>%
+  mutate(ProjectType = "Safe Haven")
 
-rm(participating_fam_all_es, participating_fam_all_th)
+participating_subpops <- 
+  rbind(participating_subpops_es, 
+        participating_subpops_th, 
+        participating_subpops_sh)
 
+rm(participating_subpops_es, participating_subpops_th, participating_subpops_sh)
 
+# Tying things together ---------------------------------------------------
 
-
-
+participating <- participating_co_all %>%
+  full_join(participating_fam_all, by = "ProjectType") %>%
+  full_join(participating_fam_vet, by = "ProjectType") %>%
+  full_join(participating_fam_youth, by = "ProjectType") %>%
+  full_join(participating_ind_all, by = "ProjectType") %>%
+  full_join(participating_ind_vet, by = "ProjectType") %>%
+  full_join(participating_ind_youth, by = "ProjectType") %>%
+  full_join(participating_subpops, by = "ProjectType")
 
 
 
