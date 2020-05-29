@@ -539,6 +539,186 @@ participating_subpops <-
 
 rm(participating_subpops_es, participating_subpops_th, participating_subpops_sh)
 
+# Order of the measures for data entry ------------------------------------
+
+measures_in_order <- c(
+  "HHwChildHouseholds",
+  "HHwChildTotalPersons",
+  "HHwChildUnder18",
+  "HHwChild18to24",
+  "HHwChildOver24",
+  "HHwChildMissingDOB",
+  "HHwChildFemale",
+  "HHwChildMale",
+  "HHwChildTransgender",
+  "HHwChildNonConforming",
+  "HHwChildGenderDKR",
+  "HHwChildGenderMissing",
+  "HHwChildNonHispanic",
+  "HHwChildHispanic",
+  "HHwChildEthnicityDKR",
+  "HHwChildEthnicityMissing",
+  "HHwChildRaceWhite",
+  "HHwChildRaceBlack",
+  "HHwChildRaceAsian",
+  "HHwChildRaceAmIndAkNat",
+  "HHwChildRaceNatHawaiiPacIsland",
+  "HHwChildRaceMultiple",
+  "HHwChildRaceDKR",
+  "HHwChildRaceMissing",
+  "HHwChildCHHouseholds",
+  "HHwChildCHPersons",
+  "HHwoChildHouseholds",
+  "HHwoChildTotalAdults",
+  "HHwoChild18to24",
+  "HHwoChildOver24",
+  "HHwoChildMissingDOB",
+  "HHwoChildFemale",
+  "HHwoChildMale",
+  "HHwoChildTransgender",
+  "HHwoChildNonConforming",
+  "HHwoChildGenderDKR",
+  "HHwoChildGenderMissing",
+  "HHwoChildNonHispanic",
+  "HHwoChildHispanic",
+  "HHwoChildEthnicityDKR",
+  "HHwoChildEthnicityMissing",
+  "HHwoChildRaceWhite",
+  "HHwoChildRaceBlack",
+  "HHwoChildRaceAsian",
+  "HHwoChildRaceAmIndAkNat",
+  "HHwoChildRaceNatHawaiiPacIsland",
+  "HHwoChildRaceMultiple",
+  "HHwoChildRaceDKR",
+  "HHwoChildRaceMissing",
+  "HHwoChildCHPersons",
+  "HHChildOnlyHouseholds",
+  "HHChildOnlyTotalChildren",
+  "HHChildOnlyFemale",
+  "HHChildOnlyMale",
+  "HHChildOnlyTransgender",
+  "HHChildOnlyNonConforming",
+  "HHChildOnlyGenderDKR",
+  "HHChildOnlyGenderMissing",
+  "HHChildOnlyNonHispanic",
+  "HHChildOnlyHispanic",
+  "HHChildOnlyEthnicityDKR",
+  "HHChildOnlyEthnicityMissing",
+  "HHChildOnlyRaceWhite",
+  "HHChildOnlyRaceBlack",
+  "HHChildOnlyRaceAsian",
+  "HHChildOnlyRaceAmIndAkNat",
+  "HHChildOnlyRaceNatHawaiiPacIsland",
+  "HHChildOnlyRaceMultiple",
+  "HHChildOnlyRaceDKR",
+  "HHChildOnlyRaceMissing",
+  "HHChildOnlyCHPersons",
+  "VetHHwChildHouseholds",
+  "VetHHwChildTotalPersons",
+  "VetHHwChildVets",
+  "VetHHwChildFemale",
+  "VetHHwChildMale",
+  "VetHHwChildTransgender",
+  "VetHHwChildNonConforming",
+  "VetHHwChildGenderDKR",
+  "VetHHwChildGenderMissing",
+  "VetHHwChildNonHispanic",
+  "VetHHwChildHispanic",
+  "VetHHwChildEthnicityDKR",
+  "VetHHwChildEthnicityMissing",
+  "VetHHwChildRaceWhite",
+  "VetHHwChildRaceBlack",
+  "VetHHwChildRaceAsian",
+  "VetHHwChildRaceAmIndAkNat",
+  "VetHHwChildRaceNatHawaiiPacIsland",
+  "VetHHwChildRaceMultiple",
+  "VetHHwChildRaceDKR",
+  "VetHHwChildRaceMissing",
+  "VetHHwChildCHHouseholds",
+  "VetHHwChildCHPersons",
+  "VetHHwoChildHouseholds",
+  "VetHHwoChildTotalPersons",
+  "VetHHwoChildVets",
+  "VetHHwoChildFemale",
+  "VetHHwoChildMale",
+  "VetHHwoChildTransgender",
+  "VetHHwoChildNonConforming",
+  "VetHHwoChildGenderDKR",
+  "VetHHwoChildGenderMissing",
+  "VetHHwoChildNonHispanic",
+  "VetHHwoChildHispanic",
+  "VetHHwoChildEthnicityDKR",
+  "VetHHwoChildEthnicityMissing",
+  "VetHHwoChildRaceWhite",
+  "VetHHwoChildRaceBlack",
+  "VetHHwoChildRaceAsian",
+  "VetHHwoChildRaceAmIndAkNat",
+  "VetHHwoChildRaceNatHawaiiPacIsland",
+  "VetHHwoChildRaceMultiple",
+  "VetHHwoChildRaceDKR",
+  "VetHHwoChildRaceMissing",
+  "VetHHwoChildCHPersons",
+  "UYouthHouseholds",
+  "UYouthTotalYouth",
+  "UYouthUnder18",
+  "UYouth18to24",
+  "UYouthFemale",
+  "UYouthMale",
+  "UYouthTransgender",
+  "UYouthNonConforming",
+  "UYouthGenderDKR",
+  "UYouthGenderMissing",
+  "UYouthNonHispanic",
+  "UYouthHispanic",
+  "UYouthEthnicityDKR",
+  "UYouthEthnicityMissing",
+  "UYouthRaceWhite",
+  "UYouthRaceBlack",
+  "UYouthRaceAsian",
+  "UYouthRaceAmIndAkNat",
+  "UYouthRaceNatHawaiiPacIsland",
+  "UYouthRaceMultiple",
+  "UYouthRaceDKR",
+  "UYouthRaceMissing",
+  "UYouthCHHouseholds",
+  "UYouthCHPersons",
+  "ParentYouthHouseholds",
+  "ParentYouthTotalPersons",
+  "ParentYouthParentingYouth",
+  "ParentYouthChildren",
+  "ParentYouthUnder18",
+  "ParentYouthUnder18Children",
+  "ParentYouth18to24",
+  "ParentYouth18to24Children",
+  "ParentYouthMissingHoH",
+  "ParentYouthFemale",
+  "ParentYouthMale",
+  "ParentYouthTransgender",
+  "ParentYouthNonConforming",
+  "ParentYouthGenderDKR",
+  "ParentYouthGenderMissing",
+  "ParentYouthNonHispanic",
+  "ParentYouthHispanic",
+  "ParentYouthEthnicityDKR",
+  "ParentYouthEthnicityMissing",
+  "ParentYouthRaceWhite",
+  "ParentYouthRaceBlack",
+  "ParentYouthRaceAsian",
+  "ParentYouthRaceAmIndAkNat",
+  "ParentYouthRaceNatHawaiiPacIsland",
+  "ParentYouthRaceMultiple",
+  "ParentYouthRaceDKR",
+  "ParentYouthRaceMissing",
+  "ParentYouthCHHouseholds",
+  "ParentYouthCHPersons",
+  "SubPopSeriousMentalIllness",
+  "SubPopSubstanceAbuse",
+  "SubPopHIVAIDS",
+  "SubPopDomesticViolence"
+)
+
+
+
 # Tying things together ---------------------------------------------------
 
 participating <- participating_co_all %>%
@@ -549,7 +729,7 @@ participating <- participating_co_all %>%
   full_join(participating_ind_vet, by = "ProjectType") %>%
   full_join(participating_ind_youth, by = "ProjectType") %>%
   full_join(participating_subpops, by = "ProjectType") %>%
-  select(-ProjectType)
+  select(all_of(measures_in_order))
 
 # Adding columns from the ART report to non-participting ------------------
 
@@ -603,12 +783,13 @@ non_participating <- non_participating %>%
     UYouthCHHouseholds = 0
   ) %>%
   add_row(ProjectType = "Safe Haven") %>%
-  select(-SoftwareName, -SourceID, -CountID, -OrganizationName, -ProjectName,
-         -ReportDate, -DateCreated, -ProjectType)
+  select(all_of(measures_in_order))
 
 non_participating[is.na(non_participating)] <- 0
 
 participating[is.na(participating)] <- 0
+
+
 
 total_sheltered <- non_participating + participating
 
@@ -632,7 +813,7 @@ rm(participating_co_all,
 
 report <- total_sheltered %>%
   pivot_longer(
-    cols = c(HHwChildHouseholds:UYouthCHHouseholds),
+    cols = c(HHwChildHouseholds:SubPopDomesticViolence),
     names_to = "ProjectType",
     names_repair = "unique"
   ) %>%
